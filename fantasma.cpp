@@ -1,8 +1,8 @@
 #include "fantasma.h"
 
 Fantasma::Fantasma(){
-    this->posX = 23;
-    this->posY = 2;
+    this->posX = 24;
+    this->posY = 3;
 }
 
 int Fantasma::getX(){

@@ -2,8 +2,8 @@
 
 
 Pacman::Pacman(){
-    this->posX = 14;
-    this->posY = 3;
+    this->posX = 13;
+    this->posY = 2;
     this->pontos = 0;
     this->status = 1;
 }

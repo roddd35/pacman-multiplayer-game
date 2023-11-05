@@ -1,10 +1,10 @@
 PP=g++
 CFLAGS= -Wall -g
-OTHERS= tabuleiro.cpp pacman.cpp fantasma.cpp
+OTHERS= tabuleiro.cpp pacman.cpp fantasma.cpp partida.cpp
 
 ################################
 
-OBJS=tabuleiro.o pacman.o fantasma.o
+OBJS=tabuleiro.o pacman.o fantasma.o partida.o
 MAIN=main.cpp
 
 ################################
@@ -16,6 +16,7 @@ all: ep
 tabuleiro.o: tabuleiro.h
 pacman.o: pacman.h
 fantasma.o: fantasma.h
+partida.o: partida.h
 main.o: main.c
 
 ep: ${OBJS} 

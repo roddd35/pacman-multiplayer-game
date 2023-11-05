@@ -5,6 +5,9 @@
 #include <iostream>
 #include <string>
 
+#define FANTASMA 1
+#define PLAYER 2
+
 #define rowTab 5
 #define colTab 27
 
@@ -19,5 +22,7 @@ class Tabuleiro {
         Tabuleiro();
         int getPacdots();
         void imprimeTabuleiro();
+        void posPerda(int x, int y);
         Pacman movimentaPacman(char mov, Pacman p, char labAux[5][27]);
+        Fantasma movimentaFantasma(char mov, Fantasma f, char labAux[5][27], int sprite);
 };
