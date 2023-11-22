@@ -1,6 +1,7 @@
 #pragma once
 
 #include "serverAux.h"
+#include <vector>
 
 class Server{
     private:

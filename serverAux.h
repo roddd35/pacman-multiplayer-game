@@ -1,7 +1,6 @@
 #pragma once
 
-#define _GNU_SOURCE
-#include "server.h"
+#include "serverDef.h"
 #include <ctime>
 #include <thread>
 #include <cerrno>

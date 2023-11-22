@@ -14,7 +14,7 @@
 /*  PARA COMPILAR O CLIENTE:
  *  gcc -Wall -o cliente cliente.cpp
  *  ./cliente UDP 127.0.0.1 8010
- *  ./cliente TCP 127.0.0.1 11100 
+ *  ./cliente TCP 127.0.0.1 11100
  */
 
 int main(int argc, char **argv) {
@@ -107,7 +107,7 @@ int main(int argc, char **argv) {
         dadosLocalLen = sizeof(dadosLocal);
         bzero(&dadosLocal, dadosLocalLen);
         servaddr.sin_family = AF_INET;
-        servaddr.sin_port = htons(atoi(argv[2]));
+        servaddr.sin_port = htons(atoi(argv[3]));
 
         /* UDP: É necessário passar o tamanho da estrutura para usar na função que
         * envia mensagem */

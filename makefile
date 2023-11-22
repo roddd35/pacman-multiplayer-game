@@ -1,11 +1,12 @@
 PP=g++
 CFLAGS= -Wall -g
 OTHERS= tabuleiro.cpp pacman.cpp fantasma.cpp partida.cpp
+SERVEROTHERS= serverAux.cpp serverDef.cpp
 
 ################################
 
 OBJS=tabuleiro.o pacman.o fantasma.o partida.o
-SERVEROBJS=servidor.o serverAux.o server.o
+SERVEROBJS=serverDef.o serverAux.o
 
 MAINSERVER=servidor.cpp
 MAINCLIENT=cliente.cpp
@@ -25,8 +26,11 @@ tabuleiro.o: tabuleiro.h
 pacman.o: pacman.h
 fantasma.o: fantasma.h
 partida.o: partida.h
+
+
+serverDef.o: serverDef.h
 serverAux.o: serverAux.h
-server.o: server.h
+
 servidor.o: servidor.cpp
 cliente.o: cliente.cpp
 main.o: main.cpp
@@ -37,7 +41,7 @@ ep: ${OBJS}
 		@rm -rf *.o *.dSYM .vscode .DS_Store
 
 svr: ${SERVEROBJS}
-		${PP} ${CFLAGS} -o servidor ${MAINSERVER} 
+		${PP} ${CFLAGS} -o servidor ${MAINSERVER} ${SERVEROTHERS}
 		@rm -rf *.o *.dSYM .vscode .DS_Store
 
 clt: cliente.o

@@ -1,8 +1,8 @@
-#include "server.h"
+#include "serverDef.h"
 #include "serverAux.h"
 
 Server::Server(std::vector<int> p){
-    for(int i = 0; i < p.size(); i++)
+    for(int i = 0; i < (int)p.size(); i++)
         this->ports.push_back(p[i]);
 }
 
@@ -21,9 +21,9 @@ int Server::runServer(){
     std::vector<struct sockaddr_in> servaddr(this->ports.size());
 
     // Leitura/armazenamento do Socket e Porta
-    for(int i = 0; i < this->ports.size(); i++){
-        udpSocks.push_back(socket(AF_INET, SOCK_DGRAM, 0));
-        tcpSocks.push_back(socket(AF_INET, SOCK_STREAM, 0));
+    for(int i = 0; i < (int)this->ports.size(); i++){
+        udpSocks[i] = socket(AF_INET, SOCK_DGRAM, 0);
+        tcpSocks[i] = socket(AF_INET, SOCK_STREAM, 0);
 
         // Verificar se leu os sockets corretamente
         if (udpSocks[i] == -1) {
@@ -44,12 +44,12 @@ int Server::runServer(){
 
         // Sockets de reuso
         int enableReuse = 1;
-        if (setsockopt(tcpSocks[i], SOL_SOCKET, SO_REUSEADDR, &enableReuse, sizeof(int)) < 0) {
+        if (setsockopt(tcpSocks[i], SOL_SOCKET, SO_REUSEADDR, &enableReuse, sizeof(int)) == -1) {
             std::cerr << "[ERRO]: Socket Reuse TCP" << std::endl;
             exit(1);
         }
 
-        if (setsockopt(udpSocks[i], SOL_SOCKET, SO_REUSEADDR, &enableReuse, sizeof(int)) < 0) {
+        if (setsockopt(udpSocks[i], SOL_SOCKET, SO_REUSEADDR, &enableReuse, sizeof(int)) == -1) {
             std::cerr << "[ERRO]: Socket Reuse UDP" << std::endl;
             exit(1);
         }
@@ -71,21 +71,20 @@ int Server::runServer(){
             exit(1);
         }
     }
-    // mudar isso aqui jaja
-    std::cout << "[Servidor no ar]: Aguardando conexões nas portas";
-    for(int i = 0; i < this->ports.size(); i++){
-        std::cout << " " << this->ports[i] ;
-    } 
-    std::cout << ".]" << std::endl;
+
+    std::cout << "[Servidor no ar]: Aguardando conexões nas portas: ";
+    for(int i = 0; i < (int)this->ports.size(); i++)
+        std::cout << this->ports[i] << " ";
+    std::cout << std::endl;
 
     for(;;){
-        for(int i = 0; i < this->ports.size(); i++){
+        for(int i = 0; i < (int)this->ports.size(); i++){
             // Conexões UDP
             std::thread([&](){
                 int* udpClientSock = new int;
                 *udpClientSock = udpSocks[i];
 
-                ThreadArgs *udpArgs = new ThreadArgs;
+                ThreadArgs* udpArgs = new ThreadArgs;
                 udpArgs->connfd = udpClientSock;
                 udpArgs->clientAddress = servaddr[i];
 
@@ -103,7 +102,6 @@ int Server::runServer(){
             // Conexões TCP
             std::thread([&](){
                 int* tcpClientSock = new int;
-                // ver se coloca = new int
 
                 *tcpClientSock = accept(tcpSocks[i], nullptr, nullptr);
 
