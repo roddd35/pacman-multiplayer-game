@@ -1,15 +1,18 @@
 #include "serverDef.h"
 #include "serverAux.h"
 
+/*-*-*-*-*-* Construtor *-*-*-*-*-*/
 Server::Server(std::vector<int> p){
     for(int i = 0; i < (int)p.size(); i++)
         this->ports.push_back(p[i]);
 }
 
+/*-*-*-*-*-* Destrutor *-*-*-*-*-*/
 Server::~Server(){
     
 }
 
+/*-*-*-*-*-* Running server Function *-*-*-*-*-*/
 int Server::runServer(){
     ll tUDP = 0;
     ll tTCP = 0;

@@ -7,7 +7,7 @@
  */
 
 int main(int argc, char **argv) {
-    int	sockfd;
+    int	sockfd = -1;
     struct hostent *hptr;
     char enderecoIPServidor[INET_ADDRSTRLEN];
 
@@ -41,8 +41,7 @@ int main(int argc, char **argv) {
         cliente.handleTCPClient();
 
     // Cliente UDP
-    else if(strcmp(argv[1], "UDP") == 0)
+    if(strcmp(argv[1], "UDP") == 0)
         cliente.handleUDPClient();
-   
-	exit(0);
+    exit(0);
 }

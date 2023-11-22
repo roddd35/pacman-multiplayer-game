@@ -26,6 +26,7 @@ class Client{
     public:
         Client(int sock, int port, char protocol[3], char IP[INET_ADDRSTRLEN]);
         ~Client();
+        void printParameters();
         void handleTCPClient();
         void handleUDPClient();
 };
