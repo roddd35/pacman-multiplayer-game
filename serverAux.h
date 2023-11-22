@@ -1,11 +1,15 @@
 #pragma once
 
 #define _GNU_SOURCE
-#include <ctime>   
-#include <cerrno>  
-#include <cstring> 
+#include "server.h"
+#include <ctime>
+#include <thread>
+#include <cerrno>
+#include <vector>
+#include <string>
+#include <cstring>
 #include <netdb.h>
-#include <cstdlib> 
+#include <cstdlib>
 #include <iostream>
 #include <unistd.h>
 #include <pthread.h>
@@ -21,7 +25,11 @@
 #define ll long long
 
 struct ThreadArgs {
-    int connfd;
+    int port;
+    int* connfd;
+    struct sockaddr_in clientAddress;
 };
 
-void* makeThread(void* arg);
+// handleTCP e handleUDP
+void* handleTCP(void* arg);
+void* handleUDP(void* arg);
