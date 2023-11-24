@@ -1,3 +1,4 @@
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #include "serverAux.h"
 #include "serverDef.h"
 
@@ -7,8 +8,8 @@ void* handleTCP(void* arg){
     args = (ThreadArgs*)arg;
     int socket = *(int*)args->connfd;
     // int flag = 1;
-    char recvline[MAXLINE];
-    ssize_t size;
+    // char recvline[MAXLINE];
+    // ssize_t size;
 
     write(socket, "Bem vindo. Digite um comando: ", 31);
     processCommand(socket);
@@ -55,7 +56,7 @@ void* handleUDP(void* arg){
 // processar o comando digitado pelo cliente
 void processCommand(int sockfd){
     int op = 0;
-    char recvOp[4];
+    char recvOp[5];
     char recvline[MAXLINE];
     ssize_t size;
     
@@ -64,17 +65,19 @@ void processCommand(int sockfd){
     // cada numero ocupa 4 bytes na mensagem
     // estrutura da mensagem: [operacao] [tamanho primeiro trecho] [primeiro trecho] [tamanho segundo trecho] [segundo trecho]
     // o tamanho de cada trecho também deve ser enviado em 4 bytes (eu espero)
-    size = read(sockfd, recvOp, 4);
-    op = std::stoi(recvOp);
+    size = read(sockfd, recvOp, 5);
+    op = std::atoi(recvOp);
 
     // OPERAÇÕES
     // novo usuário
     if(op == 1){
         // ler o tamanho do username e limpar buffer
         int userLen;
-        size = read(sockfd, recvline, 4);
-        userLen = std::stoi(recvline);
+        size = read(sockfd, recvline, 5);
+        userLen = std::atoi(recvline);
         memset(recvline, 0, sizeof(recvline));
+
+        // std::cout << userLen << std::endl;
 
         // ler o username e limpar buffer
         char username[userLen];
@@ -83,11 +86,15 @@ void processCommand(int sockfd){
             username[i] = recvline[i];
         memset(recvline, 0, sizeof(recvline));
 
+        // std::cout << username << std::endl;
+
         // ler o tamanho da senha e limpar buffer
         int passLen;
-        size = read(sockfd, recvline, 4);
-        passLen = std::stoi(recvline);
+        size = read(sockfd, recvline, 5);
+        passLen = std::atoi(recvline);
         memset(recvline, 0, sizeof(recvline));
+
+        // std::cout << passLen << std::endl;
 
         // ler a senha e limpar buffer
         char pass[passLen];
@@ -96,6 +103,8 @@ void processCommand(int sockfd){
             pass[i] = recvline[i];
         memset(recvline, 0, sizeof(recvline));
 
+        // std::cout << pass << std::endl;
+
         // fazer o registro no arquivo de log
         // guardar o nome, a senha, o socket(?) a pontuacao
     }
@@ -103,9 +112,11 @@ void processCommand(int sockfd){
     else if(op == 2){
         // ler o tamanho da senha antiga
         int passLen;
-        size = read(sockfd, recvline, 4);
-        passLen = std::stoi(recvline);
+        size = read(sockfd, recvline, 5);
+        passLen = std::atoi(recvline);
         memset(recvline, 0, sizeof(recvline));
+
+        // std::cout << passLen << std::endl;
 
         // ler a senha antiga e verificar se ela bate com o sistema
         char oldPass[passLen];
@@ -114,10 +125,14 @@ void processCommand(int sockfd){
             oldPass[i] = recvline[i];
         memset(recvline, 0, sizeof(recvline));
 
+        // std::cout << oldPass << std::endl;
+
         // ler o tamanho da senha nova
-        size = read(sockfd, recvline, 4);
-        passLen = std::stoi(recvline);
+        size = read(sockfd, recvline, 5);
+        passLen = std::atoi(recvline);
         memset(recvline, 0, sizeof(recvline));
+
+        // std::cout << passLen << std::endl;
 
         // ler a senha nova e registrar no sistema
         char newPass[passLen];
@@ -125,13 +140,15 @@ void processCommand(int sockfd){
         for(int i = 0; i < passLen; i++)
             newPass[i] = recvline[i];
         memset(recvline, 0, sizeof(recvline));
+
+        // std::cout << newPass << std::endl;
     }
     // logar
     else if(op == 3){
         // ler o tamanho do username e limpar buffer
         int userLen;
-        size = read(sockfd, recvline, 4);
-        userLen = std::stoi(recvline);
+        size = read(sockfd, recvline, 5);
+        userLen = std::atoi(recvline);
         memset(recvline, 0, sizeof(recvline));
 
         // ler o username e limpar buffer
@@ -143,8 +160,8 @@ void processCommand(int sockfd){
 
         // ler o tamanho da senha e limpar buffer
         int passLen;
-        size = read(sockfd, recvline, 4);
-        passLen = std::stoi(recvline);
+        size = read(sockfd, recvline, 5);
+        passLen = std::atoi(recvline);
         memset(recvline, 0, sizeof(recvline));
 
         // ler a senha e limpar buffer
@@ -158,7 +175,7 @@ void processCommand(int sockfd){
     }
     // tabela de pontuacao de todos usuarios
     else if(op == 4){
-        
+
     }
     // usuarios conectados
     else if(op == 5){
@@ -170,7 +187,21 @@ void processCommand(int sockfd){
     }
     // entrar em outra partida
     else if(op == 7){
-        
+        int challengeLen;
+        size = read(sockfd, recvline, 5);
+        challengeLen = std::atoi(recvline);
+        memset(recvline, 0, sizeof(recvline));
+
+        // std::cout << challengeLen << std::endl;
+
+        // ler o desafio
+        char challenge[challengeLen];
+        size = read(sockfd, recvline, challengeLen);
+        for(int i = 0; i < challengeLen; i++)
+            challenge[i] = recvline[i];
+        memset(recvline, 0, sizeof(recvline));
+
+        // std::cout << challenge << std::endl;
     }
     // desloga
     else if(op == 8){
@@ -178,6 +209,7 @@ void processCommand(int sockfd){
     }
     // finaliza execução do cliente
     else if(atoi(recvOp) == 9){
+        std::cout << "[Cliente " << sockfd << " desconectado]" << std::endl;
         close(sockfd);
     }
 }

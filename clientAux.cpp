@@ -23,7 +23,7 @@ void write_command(int sock){
     int op;
     std::string command;
     std::string aux;
-    char numString[4];
+    char numString[5];
     char msg[MAXLINE];
 
     // ler o comando
@@ -37,29 +37,29 @@ void write_command(int sock){
 
         // escrever o tamanho do primeiro trecho
         std::cin >> aux;
-        snprintf(numString, sizeof(numString), "%04d", sizeof(aux));
+        snprintf(numString, sizeof(numString), "%04d", (int)aux.length());
         write(sock, numString, sizeof(numString));
         memset(numString, 0, sizeof(numString));
 
         // escrever o primeiro trecho
-        for(int i = 0; i < sizeof(aux); i++)
+        for(int i = 0; i < (int)aux.length(); i++)
             msg[i] = aux[i];
-        write(sock, msg, sizeof(aux));
+        std::cout << msg << std::endl;
+        write(sock, msg, aux.length());
         memset(msg, 0, sizeof(msg));
-        aux = nullptr;
 
         // escrever o tamanho do segundo trecho
         std::cin >> aux;
-        snprintf(numString, sizeof(numString), "%04d", sizeof(aux));
+        snprintf(numString, sizeof(numString), "%04d", (int)aux.length());
         write(sock, numString, sizeof(numString));
         memset(numString, 0, sizeof(numString));
 
         // escrever o segundo trecho
-        for(int i = 0; i < sizeof(aux); i++)
+        for(int i = 0; i < (int)aux.length(); i++)
             msg[i] = aux[i];
-        write(sock, msg, sizeof(aux));
+        std::cout << msg << std::endl;
+        write(sock, msg, aux.length());
         memset(msg, 0, sizeof(msg));
-        aux = nullptr;
     }
 
     else if(command == "senha"){
@@ -71,29 +71,29 @@ void write_command(int sock){
 
         // escrever o tamanho do primeiro trecho
         std::cin >> aux;
-        snprintf(numString, sizeof(numString), "%04d", sizeof(aux));
+        snprintf(numString, sizeof(numString), "%04d", (int)aux.length());
         write(sock, numString, sizeof(numString));
         memset(numString, 0, sizeof(numString));
 
         // escrever o primeiro trecho
-        for(int i = 0; i < sizeof(aux); i++)
+        for(int i = 0; i < (int)aux.length(); i++)
             msg[i] = aux[i];
-        write(sock, msg, sizeof(aux));
+        std::cout << msg << std::endl;
+        write(sock, msg, aux.length());
         memset(msg, 0, sizeof(msg));
-        aux = nullptr;
 
         // escrever o tamanho do segundo trecho
         std::cin >> aux;
-        snprintf(numString, sizeof(numString), "%04d", sizeof(aux));
+        snprintf(numString, sizeof(numString), "%04d", (int)aux.length());
         write(sock, numString, sizeof(numString));
         memset(numString, 0, sizeof(numString));
 
         // escrever o segundo trecho
-        for(int i = 0; i < sizeof(aux); i++)
+        for(int i = 0; i < (int)aux.length(); i++)
             msg[i] = aux[i];
-        write(sock, msg, sizeof(aux));
+        std::cout << msg << std::endl;
+        write(sock, msg, aux.length());
         memset(msg, 0, sizeof(msg));
-        aux = nullptr;
     }
 
     else if(command == "entra"){
@@ -105,12 +105,12 @@ void write_command(int sock){
 
         // escrever o tamanho do primeiro trecho
         std::cin >> aux;
-        snprintf(numString, sizeof(numString), "%04d", sizeof(aux));
+        snprintf(numString, sizeof(numString), "%04d", (int)sizeof(aux));
         write(sock, numString, sizeof(numString));
         memset(numString, 0, sizeof(numString));
 
         // escrever o primeiro trecho
-        for(int i = 0; i < sizeof(aux); i++)
+        for(int i = 0; i < (int)sizeof(aux); i++)
             msg[i] = aux[i];
         write(sock, msg, sizeof(aux));
         memset(msg, 0, sizeof(msg));
@@ -118,12 +118,12 @@ void write_command(int sock){
 
         // escrever o tamanho do segundo trecho
         std::cin >> aux;
-        snprintf(numString, sizeof(numString), "%04d", sizeof(aux));
+        snprintf(numString, sizeof(numString), "%04d", (int)sizeof(aux));
         write(sock, numString, sizeof(numString));
         memset(numString, 0, sizeof(numString));
 
         // escrever o segundo trecho
-        for(int i = 0; i < sizeof(aux); i++)
+        for(int i = 0; i < (int)sizeof(aux); i++)
             msg[i] = aux[i];
         write(sock, msg, sizeof(aux));
         memset(msg, 0, sizeof(msg));
@@ -163,16 +163,16 @@ void write_command(int sock){
 
         // escrever o tamanho do oponente
         std::cin >> aux;
-        snprintf(numString, sizeof(numString), "%04d", sizeof(aux));
+        snprintf(numString, sizeof(numString), "%04d", (int)aux.length());
         write(sock, numString, sizeof(numString));
         memset(numString, 0, sizeof(numString));
 
         // escrever o oponente
-        for(int i = 0; i < sizeof(aux); i++)
+        for(int i = 0; i < (int)aux.length(); i++)
             msg[i] = aux[i];
-        write(sock, msg, sizeof(aux));
+        std::cout << msg << std::endl;
+        write(sock, msg, aux.length());
         memset(msg, 0, sizeof(msg));
-        aux = nullptr;
     }
 
     else if(command == "sai"){
@@ -187,6 +187,7 @@ void write_command(int sock){
         // escrever o comando (numero de 4 bytes)
         op = 9;
         snprintf(numString, sizeof(numString), "%04d", op);
+        std::cout << "tchau" << std::endl;
         write(sock, numString, sizeof(numString));
         memset(numString, 0, sizeof(numString));
     }
