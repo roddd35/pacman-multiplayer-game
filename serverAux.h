@@ -19,6 +19,7 @@
 
 #define LISTENQ 1
 #define MAXDATASIZE 100
+#define SIZEMAX 1024
 #define MAXLINE 4096
 #define QTDTHREADS 150
 #define ll long long
@@ -32,3 +33,4 @@ struct ThreadArgs {
 // handleTCP e handleUDP
 void* handleTCP(void* arg);
 void* handleUDP(void* arg);
+void processCommand(int sockfd);

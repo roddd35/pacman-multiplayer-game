@@ -1,4 +1,5 @@
 #include "clientDef.h"
+#include "clientAux.h"
 
 /*-*-*-*-*-* Construtor *-*-*-*-*-*/
 Client::Client(int sock, int port, char protocol[3], char IP[INET_ADDRSTRLEN]){
@@ -22,11 +23,11 @@ void Client::printParameters(){
 
 /*-*-*-*-*-* Cliente TCP *-*-*-*-*-*/
 void Client::handleTCPClient(){
-    int	n;
     int dadosLocalLen;
-    char recvline[MAXLINE + 1];
+    // char recvline[MAXLINE + 1];
     struct sockaddr_in servaddr;
     struct sockaddr_in dadosLocal;
+    // ssize_t size;
 
     if ((this->sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         perror("socket error");
@@ -54,24 +55,11 @@ void Client::handleTCPClient(){
         exit(1);
     }
 
-    n = 1;
-    while (n != 0)  {
-        if ((fgets(recvline,MAXLINE,stdin)) != NULL) {
-            if (!strcmp(recvline,"exit\n"))
-                n = 0;
-            else {
-                write(this->sockfd, recvline, strlen(recvline));
-                n = read(this->sockfd,recvline,MAXLINE);
-            }
-        }
-        else
-            n = 0;
-    }
+    // Ler mensagem de bem vindo!
+    read_begin(this->sockfd);
 
-    if (n < 0) {
-        perror("read error");
-        exit(1);
-    }
+    // Ler o comando do usuário e enviar para o servidor
+    write_command(this->sockfd);
 }
 
 /*-*-*-*-*-* Cliente UDP *-*-*-*-*-*/

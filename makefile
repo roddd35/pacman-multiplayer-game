@@ -2,13 +2,13 @@ PP=g++
 CFLAGS= -Wall -g
 OTHERS= tabuleiro.cpp pacman.cpp fantasma.cpp partida.cpp
 SERVEROTHERS= serverAux.cpp serverDef.cpp
-CLIENTOTHERS = clientDef.cpp
+CLIENTOTHERS = clientDef.cpp clientAux.cpp
 
 ################################
 
 OBJS=tabuleiro.o pacman.o fantasma.o partida.o
 SERVEROBJS=serverDef.o serverAux.o
-CLIENTOBJS=clientDef.o
+CLIENTOBJS=clientDef.o clientAux.o
 
 MAINSERVER=servidor.cpp
 MAINCLIENT=cliente.cpp
@@ -30,6 +30,7 @@ fantasma.o: fantasma.h
 partida.o: partida.h
 
 clientDef.o: clientDef.h
+clientAux.o: clientAux.h
 
 serverDef.o: serverDef.h
 serverAux.o: serverAux.h
