@@ -9,12 +9,17 @@ void* handleTCP(void* arg){
     ThreadArgs* args = new ThreadArgs;
     args = (ThreadArgs*)arg;
     int socket = *(int*)args->connfd;
+    int ret = 1;
     // int flag = 1;
     // char recvline[MAXLINE];
     // ssize_t size;
 
     write(socket, "Bem vindo. Digite um comando: ", 31);
-    processCommand(socket);
+    // verifica se o usuario parou o servidor com ^C
+    while(ret == 1){
+        // std::signal(SIGINT, manipuladorSinal);
+        ret = processCommand(socket);
+    }
 
     close(socket);
     delete args;
@@ -56,11 +61,16 @@ void* handleUDP(void* arg){
 }
 
 // processar o comando digitado pelo cliente
-void processCommand(int sockfd){
+// FAZER OS WRITES AQUI PRO CLIENTE E TALS
+// ESCREVER A STRUCTURE TODA NO ARQUIVO
+// DAR LOAD NA STRUCTURE QND INICIA O SERVER
+int processCommand(int sockfd){
     int op = 0;
+    int res = 1;
     char recvOp[5];
     char recvline[MAXLINE];
     ssize_t size;
+
     
     // ideia: para cada operação possível, vamos definir um numero
     // novo: 1, senha: 2, ...
@@ -82,10 +92,9 @@ void processCommand(int sockfd){
         // std::cout << userLen << std::endl;
 
         // ler o username e limpar buffer
-        char username[userLen];
+        std::string username;
         size = read(sockfd, recvline, userLen);
-        for(int i = 0; i < userLen; i++)
-            username[i] = recvline[i];
+        username = recvline;
         memset(recvline, 0, sizeof(recvline));
 
         // std::cout << username << std::endl;
@@ -99,23 +108,34 @@ void processCommand(int sockfd){
         // std::cout << passLen << std::endl;
 
         // ler a senha e limpar buffer
-        char pass[passLen];
+        std::string pass;
         size = read(sockfd, recvline, passLen);
-        for(int i = 0; i < passLen; i++)
-            pass[i] = recvline[i];
+        pass = recvline;
         memset(recvline, 0, sizeof(recvline));
 
         // std::cout << pass << std::endl;
-        writeFile("Cliente cadastrado");
 
-        // guardar o nome, a senha, o socket(?) a pontuacao
-        clientData* cd = new clientData;
-        cd->username = username;
-        cd->password = pass;
-        cd->clientSock = sockfd;
-        cd->isConnected = true;
-        cd->allTimeScore = 0;
-        data.push_back(cd);
+        // verifica se o usuario ja existe
+        for(int i = 0; i < (int)data.size(); i++){
+            if(data[i]->username == username){
+                res = 0;
+                write(sockfd, "0", 1);
+                break;
+            }
+        }
+        if(res){
+            // guardar o nome, a senha, o socket(?) a pontuacao
+            clientData* cd = new clientData;
+            cd->username = username;
+            cd->password = pass;
+            cd->clientSock = sockfd;
+            cd->isConnected = true;
+            cd->isPlaying = false;
+            cd->allTimeScore = 0;
+            data.push_back(cd);
+            write(sockfd, "1", 1);
+            writeFile("Cliente cadastrado");
+        }
     }
     // mudar senha
     else if(op == 2){
@@ -128,10 +148,9 @@ void processCommand(int sockfd){
         // std::cout << passLen << std::endl;
 
         // ler a senha antiga
-        char oldPass[passLen];
+        std::string oldPass;
         size = read(sockfd, recvline, passLen);
-        for(int i = 0; i < passLen; i++)
-            oldPass[i] = recvline[i];
+        oldPass = recvline;
         memset(recvline, 0, sizeof(recvline));
 
         // std::cout << oldPass << std::endl;
@@ -144,25 +163,25 @@ void processCommand(int sockfd){
         // std::cout << passLen << std::endl;
 
         // ler a senha nova
-        char newPass[passLen];
+        std::string newPass;
         size = read(sockfd, recvline, passLen);
-        for(int i = 0; i < passLen; i++)
-            newPass[i] = recvline[i];
+        newPass = recvline;
         memset(recvline, 0, sizeof(recvline));
 
         // std::cout << newPass << std::endl;
 
         // buscar entre os clientes cadastrados e mudar senha
-        // colocar isso em uma funcao
         for(int i = 0; i < (int)data.size(); i++){
             if(data[i]->clientSock == sockfd){
+                // std::cout << data[i]->password << " " << oldPass << std::endl;
                 if(data[i]->password == oldPass){
                     data[i]->password = newPass;
+                    write(sockfd, "1", 1);
                     writeFile("Senha de cliente alterada");
                     // reescrever arquivo com todos os itens do struct depois
                 }
                 else
-                    std::cout << "Senha antiga incorreta!" << std::endl;
+                    write(sockfd, "0", 1);
             }
         }
         
@@ -177,10 +196,9 @@ void processCommand(int sockfd){
         memset(recvline, 0, sizeof(recvline));
 
         // ler o username e limpar buffer
-        char username[userLen];
+        std::string username;
         size = read(sockfd, recvline, userLen);
-        for(int i = 0; i < userLen; i++)
-            username[i] = recvline[i];
+        username = recvline;
         memset(recvline, 0, sizeof(recvline));
 
         // ler o tamanho da senha e limpar buffer
@@ -190,44 +208,57 @@ void processCommand(int sockfd){
         memset(recvline, 0, sizeof(recvline));
 
         // ler a senha e limpar buffer
-        char pass[passLen];
+        std::string pass;
         size = read(sockfd, recvline, passLen);
-        for(int i = 0; i < passLen; i++)
-            pass[i] = recvline[i];
+        pass = recvline;
         memset(recvline, 0, sizeof(recvline));
 
         // verificar se o cliente existe
         for(int i = 0; i < (int)data.size(); i++){
-            if(data[i]->username == username && data[i]->password == pass){
+            if(data[i]->username == username && data[i]->password == pass && !data[i]->isConnected){
                 data[i]->isConnected = true;
+                write(sockfd, "1", 1);
                 writeFile("Cliente conectado");
                 existe = true;
             }
         }
         // fazer um write aqui talvez
         if(!existe)
-            std::cout << "Cliente não cadastrado" << std::endl;
+            write(sockfd, "0", 1);
     }
     // tabela de pontuacao de todos usuarios
     else if(op == 4){
-        std::cout << "Tabela de Pontuação:" << std::endl;
-        for(int i = 0; i < (int)data.size(); i++)
-            std::cout << data[i]->username << ": " << data[i]->allTimeScore << std::endl;
+        std::ostringstream oss;
+        for (int i = 0; i < (int)data.size(); i++)
+            oss << data[i]->username << ": " << data[i]->allTimeScore << "\n";
+
+        std::string resultString = oss.str();
+        write(sockfd, resultString.c_str(), resultString.size());
     }
     // usuarios conectados
     else if(op == 5){
-        std::cout << "Usuários conectados:" << std::endl;
-        for(int i = 0; i < (int)data.size(); i++){
+        std::ostringstream oss;
+        for (int i = 0; i < (int)data.size(); i++)
             if(data[i]->isConnected)
-                std::cout << data[i]->username << std::endl;
-        }
+                oss << data[i]->username << "-> " << data[i]->isPlaying << "\n";
+
+        std::string resultString = oss.str();
+        write(sockfd, resultString.c_str(), resultString.size());
     }
     // iniciar partida como pacman
     else if(op == 6){
-        writeFile("Cliente iniciou partida");
+        for(int i = 0; i < (int)data.size(); i++){
+            if(data[i]->clientSock == sockfd && data[i]->isConnected){
+                data[i]->isPlaying = true;
+                write(sockfd, "1", 1);
+                writeFile("Cliente iniciou partida");
+            }
+        }
+        write(sockfd, "0", 1);
     }
     // entrar em outra partida
     else if(op == 7){
+        int flag = 0;
         int challengeLen;
         size = read(sockfd, recvline, 5);
         challengeLen = std::atoi(recvline);
@@ -236,13 +267,25 @@ void processCommand(int sockfd){
         // std::cout << challengeLen << std::endl;
 
         // ler o desafio
-        char challenge[challengeLen];
+        std::string challenge;
         size = read(sockfd, recvline, challengeLen);
-        for(int i = 0; i < challengeLen; i++)
-            challenge[i] = recvline[i];
+        challenge = recvline;
         memset(recvline, 0, sizeof(recvline));
-        writeFile("Cliente se conectou a uma partida");
-        // std::cout << challenge << std::endl;
+
+        for(int i = 0; i < (int)data.size(); i++){
+            if(data[i]->clientSock == sockfd){
+                for(int j = 0; j < (int)data.size(); j++){
+                    if(data[i]->username == challenge){
+                        flag = 1;
+                        data[i]->isPlaying = true;
+                        write(sockfd, "1", 1);
+                        writeFile("Cliente se conectou a uma partida");
+                    }
+                }
+            }
+        }
+        if(!flag)      
+            write(sockfd, "0", 1);
     }
     // desloga
     else if(op == 8){
@@ -252,14 +295,18 @@ void processCommand(int sockfd){
         writeFile("Cliente se desconectou");
     }
     // finaliza execução do cliente
+    // arrumar esse comando aqui, encerrando o servidor solo
     else if(atoi(recvOp) == 9){
-        for(int i = 0; i < (int)data.size(); i++)
-            if(data[i]->clientSock == sockfd)
+        for(int i = 0; i < (int)data.size(); i++){
+            if(data[i]->clientSock == sockfd){
                 data[i]->isConnected = false;
-        std::cout << "[Cliente " << sockfd << " desconectado]" << std::endl;
-        writeFile("Cliente desconectado");
-        close(sockfd);
+                write(sockfd, "[Cliente desconectado]", 22);
+                writeFile("Cliente desconectado");
+            }
+        }
+        return 0;
     }
+    return 1;
 }
 
 void writeFile(std::string sLog){

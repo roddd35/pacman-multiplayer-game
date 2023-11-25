@@ -25,6 +25,7 @@ void Client::printParameters(){
 /*-*-*-*-*-* Cliente TCP *-*-*-*-*-*/
 void Client::handleTCPClient(){
     int dadosLocalLen;
+    std::string command;
     // char recvline[MAXLINE + 1];
     struct sockaddr_in servaddr;
     struct sockaddr_in dadosLocal;
@@ -60,7 +61,11 @@ void Client::handleTCPClient(){
     read_begin(this->sockfd);
 
     // Ler o comando do usuário e enviar para o servidor
-    write_command(this->sockfd);
+    std::cin >> command;
+    while(command != "tchau"){
+        write_command(this->sockfd, command);
+        std::cin >> command;
+    }
 }
 
 /*-*-*-*-*-* Cliente UDP *-*-*-*-*-*/

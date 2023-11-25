@@ -7,6 +7,7 @@
 #include <chrono>
 #include <vector>
 #include <string>
+#include <csignal>
 #include <sstream>
 #include <iomanip>
 #include <fstream>
@@ -37,14 +38,16 @@ struct ThreadArgs {
 struct clientData {
     int clientSock;
     int allTimeScore;
+    bool isPlaying;
     bool isConnected;
     std::string username;
     std::string password;
 };
 
 // handleTCP e handleUDP
+int processCommand(int sockfd);
 void* handleTCP(void* arg);
 void* handleUDP(void* arg);
-void processCommand(int sockfd);
 void writeFile(std::string sLog);
+void manipuladorSinal(int sinal);
 std::string getCurrentTime();
