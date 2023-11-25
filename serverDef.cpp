@@ -76,6 +76,7 @@ int Server::runServer(){
     }
 
     std::cout << "[Servidor no ar]: Aguardando conexões nas portas: ";
+    writeLogF("Servidor iniciado", " ", " ");
     for(int i = 0; i < (int)this->ports.size(); i++)
         std::cout << this->ports[i] << " ";
     std::cout << std::endl;

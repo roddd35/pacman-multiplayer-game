@@ -24,11 +24,11 @@ void Client::printParameters(){
 
 /*-*-*-*-*-* Cliente TCP *-*-*-*-*-*/
 void Client::handleTCPClient(){
-    int dadosLocalLen;
+    int localAddrLen;
     std::string command;
     // char recvline[MAXLINE + 1];
     struct sockaddr_in servaddr;
-    struct sockaddr_in dadosLocal;
+    struct sockaddr_in localAddr;
     // ssize_t size;
 
     if ((this->sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -37,8 +37,8 @@ void Client::handleTCPClient(){
     }
 
     bzero(&servaddr, sizeof(servaddr));
-    dadosLocalLen = sizeof(dadosLocal);
-    bzero(&dadosLocal, dadosLocalLen);
+    localAddrLen = sizeof(localAddr);
+    bzero(&localAddr, localAddrLen);
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(this->port);
 
@@ -52,10 +52,13 @@ void Client::handleTCPClient(){
         exit(1);
     }
 
-    if (getsockname(this->sockfd, (struct sockaddr *) &dadosLocal, (socklen_t *) &dadosLocalLen)) {
+    if (getsockname(this->sockfd, (struct sockaddr *) &localAddr, (socklen_t *) &localAddrLen)) {
         perror("getsockname error");
         exit(1);
     }
+
+    char ipCliente[INET_ADDRSTRLEN];
+    inet_ntop(AF_INET, &(localAddr.sin_addr), ipCliente, INET_ADDRSTRLEN);
 
     // Ler mensagem de bem vindo!
     read_begin(this->sockfd);
@@ -63,9 +66,10 @@ void Client::handleTCPClient(){
     // Ler o comando do usuário e enviar para o servidor
     std::cin >> command;
     while(command != "tchau"){
-        write_command(this->sockfd, command);
+        write_command(this->sockfd, command, ipCliente);
         std::cin >> command;
     }
+    close(this->sockfd);
 }
 
 /*-*-*-*-*-* Cliente UDP *-*-*-*-*-*/

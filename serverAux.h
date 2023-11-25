@@ -40,6 +40,7 @@ struct clientData {
     int allTimeScore;
     bool isPlaying;
     bool isConnected;
+    std::string ip;
     std::string username;
     std::string password;
 };
@@ -50,6 +51,6 @@ void* handleTCP(void* arg);
 void* handleUDP(void* arg);
 void loadFile();
 void writeClientDataF();
-void writeFile(std::string sLog);
+void writeLogF(std::string sLog, std::string sUser, std::string sIP);
 
 std::string getCurrentTime();

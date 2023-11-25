@@ -5,4 +5,4 @@
 #include "serverAux.h"
 
 void read_begin(int sock);
-void write_command(int sock, std::string command);
+void write_command(int sock, std::string command, char ipCliente[INET_ADDRSTRLEN]);

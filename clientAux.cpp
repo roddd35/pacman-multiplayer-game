@@ -19,11 +19,13 @@ void read_begin(int sock){
 // fazer o write de um comando
 // estrutura da mensagem:
 // [comando] [tamanho da primeira parte] [primeira parte] [tamanho da segunda parte] [segunda parte]
-void write_command(int sock, std::string command){
+void write_command(int sock, std::string command, char ipCliente[INET_ADDRSTRLEN]){
     int op;
     std::string aux;
     char numString[5];
     char msg[MAXLINE];
+
+    write(sock, ipCliente, INET_ADDRSTRLEN);
 
     if(command == "novo"){
         // escrever o comando (numero de 4 bytes)
@@ -116,32 +118,33 @@ void write_command(int sock, std::string command){
 
         // escrever o tamanho do primeiro trecho
         std::cin >> aux;
-        snprintf(numString, sizeof(numString), "%04d", (int)sizeof(aux));
+        snprintf(numString, sizeof(numString), "%04d", (int)aux.length());
         write(sock, numString, sizeof(numString));
         memset(numString, 0, sizeof(numString));
 
         // escrever o primeiro trecho
-        for(int i = 0; i < (int)sizeof(aux); i++)
+        for(int i = 0; i < (int)aux.length(); i++)
             msg[i] = aux[i];
-        write(sock, msg, sizeof(aux));
+        write(sock, msg, (int)aux.length());
         memset(msg, 0, sizeof(msg));
 
         // escrever o tamanho do segundo trecho
         std::cin >> aux;
-        snprintf(numString, sizeof(numString), "%04d", (int)sizeof(aux));
+        snprintf(numString, sizeof(numString), "%04d", (int)aux.length());
         write(sock, numString, sizeof(numString));
         memset(numString, 0, sizeof(numString));
 
         // escrever o segundo trecho
-        for(int i = 0; i < (int)sizeof(aux); i++)
+        for(int i = 0; i < (int)aux.length(); i++)
             msg[i] = aux[i];
-        write(sock, msg, sizeof(aux));
+        write(sock, msg, (int)aux.length());
         memset(msg, 0, sizeof(msg));
+
 
         read(sock, msg, 1);
         if(atoi(msg) == 1)
             std::cout << "[Usuário logado com sucesso]" << std::endl;
-        if(atoi(msg) == 0)
+        else
             std::cout << "[Usuário ou senha incorreto, ou usuário já logado]" << std::endl;
         memset(msg, 0, sizeof(msg));
     }

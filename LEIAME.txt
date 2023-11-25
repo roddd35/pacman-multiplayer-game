@@ -1,0 +1,63 @@
+AUTOR:
+	Rodrigo de Castro Michelassi
+	13672703
+	rodrigo.michelassi@usp.br
+
+LINK VIDEO:
+
+DESCRIÇÃO:
+	O programa descrito contém uma implementação em C++ de um servidor, cliente e jogo de Pacman, na qual o usuário dispõe de diversos comandos para jogar Pacman, multiplayer ou singleplayer. Os comandos em questão são:
+
+	$ novo <usuario> <senha>
+	$ senha <senha antiga> <senha nova>
+	$ entra <usuario> <senha>
+	$ lideres
+	$ l
+	$ inicia
+	$ desafio <oponente>
+	$ sai
+	$ tchau
+
+	Durante a execução da partida, há outros comandos que podem ser usados:
+
+	$ move <direcao>
+	$ atraso
+	$ encerra	
+
+COMO EXECUTAR:
+
+	O programa recebido pode ser compilado utilizando o comando make. Vale lembrar que, para obter o make em uma máquina com Ubuntu, podemos rodar o seguinte comando no 
+terminal:
+
+		$ sudo apt-get update
+		$ sudo apt-get install make
+		
+	Com isso instalado, podemos ir ao diret\'f3rio do jogo e rodar:
+	
+		$ make	  		# compila o jogo de pacman
+		$ make server 	# compila o servidor
+		$ make client	# compila o cliente
+		$ make clean   	# limpa os arquivos desnecessários e/ou gerados durante as outras compilações
+		
+	Após isso, o programa está compilado, e basta rodar:
+	
+		$ ./servidor <PORT>
+		$ ./cliente <TCP/UDP> <IP> <PORT>
+		
+	Recomendamos que o usuário utilize uma porta que pode ser utilizada para TCP ou UDP, de acordo com suas preferências.
+
+DEPENDÊNCIAS:
+	Para executar o arquivo .C é necessário, em uma máquina com UBUNTU, utilizar o programa G++. Para obte-lo digite no terminal:
+		
+		$ sudo apt-get update
+		$ sudo apt-get install g++
+
+	Além disso, é necessário possuir o MAKE em sua máquina. Para instalar essa ferramenta, use:
+	
+		$ sudo apt-get install make
+
+	Como valores de referência, esse programa foi feito em uma máquina virtual de terminal ubuntu LIMA, com as seguintes especificações
+		Versão Ubuntu: Ubuntu 22.04
+		Versão G++: g++ (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+		Processador/Chip: Apple M1 Pro
+		Memória Sistema: 16GB

@@ -1,4 +1,4 @@
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"  // evitar esse warning porque declaramos variáveis dentro de condicional
 #include "serverAux.h"
 #include "serverDef.h"
 
@@ -65,9 +65,6 @@ void* handleUDP(void* arg){
 }
 
 // processar o comando digitado pelo cliente
-// FAZER OS WRITES AQUI PRO CLIENTE E TALS
-// ESCREVER A STRUCTURE TODA NO ARQUIVO
-// DAR LOAD NA STRUCTURE QND INICIA O SERVER
 int processCommand(int sockfd){
     int op = 0;
     int res = 1;
@@ -81,6 +78,11 @@ int processCommand(int sockfd){
     // cada numero ocupa 4 bytes na mensagem
     // estrutura da mensagem: [operacao] [tamanho primeiro trecho] [primeiro trecho] [tamanho segundo trecho] [segundo trecho]
     // o tamanho de cada trecho também deve ser enviado em 4 bytes (eu espero)
+    size = read(sockfd, recvline, sizeof(recvline));
+    std::string ip = recvline;
+    memset(recvline, 0, sizeof(recvline));
+    std::cout << ip << std::endl;
+
     size = read(sockfd, recvOp, 5);
     op = std::atoi(recvOp);
 
@@ -133,13 +135,13 @@ int processCommand(int sockfd){
             cd->username = username;
             cd->password = pass;
             cd->clientSock = sockfd;
-            cd->isConnected = true;
+            cd->isConnected = false;
             cd->isPlaying = false;
+            cd->ip = ip;
             cd->allTimeScore = 0;
             data.push_back(cd);
             writeClientDataF();
             write(sockfd, "1", 1);
-            writeFile("Cliente cadastrado");
         }
     }
     // mudar senha
@@ -182,7 +184,6 @@ int processCommand(int sockfd){
                     data[i]->password = newPass;
                     writeClientDataF();
                     write(sockfd, "1", 1);
-                    writeFile("Senha de cliente alterada");
                     break;
                 }
                 else
@@ -194,8 +195,9 @@ int processCommand(int sockfd){
     // logar
     else if(op == 3){
         bool existe = false;
-        // ler o tamanho do username e limpar buffer
         int userLen;
+
+        // ler o tamanho do username e limpar buffer
         size = read(sockfd, recvline, 5);
         userLen = std::atoi(recvline);
         memset(recvline, 0, sizeof(recvline));
@@ -223,14 +225,16 @@ int processCommand(int sockfd){
             if(data[i]->username == username && data[i]->password == pass && !data[i]->isConnected){
                 data[i]->isConnected = true;
                 data[i]->clientSock = sockfd;
+                data[i]->ip = ip;
                 write(sockfd, "1", 1);
-                writeFile("Cliente conectado");
+                writeLogF("Cliente logado!", data[i]->username, ip);
                 existe = true;
             }
         }
-        // fazer um write aqui talvez
-        if(!existe)
+        if(!existe){
+            writeLogF("Cliente não logado!", username, ip);
             write(sockfd, "0", 1);
+        }
     }
     // tabela de pontuacao de todos usuarios
     else if(op == 4){
@@ -257,7 +261,7 @@ int processCommand(int sockfd){
             if(data[i]->clientSock == sockfd && data[i]->isConnected){
                 data[i]->isPlaying = true;
                 write(sockfd, "1", 1);
-                writeFile("Cliente iniciou partida");
+                writeLogF("Cliente iniciou partida!", data[i]->username, ip);
             }
         }
         write(sockfd, "0", 1);
@@ -281,11 +285,12 @@ int processCommand(int sockfd){
         for(int i = 0; i < (int)data.size(); i++){
             if(data[i]->clientSock == sockfd){
                 for(int j = 0; j < (int)data.size(); j++){
-                    if(data[i]->username == challenge){
+                    if(data[j]->username == challenge){
                         flag = 1;
                         data[i]->isPlaying = true;
                         write(sockfd, "1", 1);
-                        writeFile("Cliente se conectou a uma partida");
+                        writeLogF("Cliente se conectou a uma partida", data[i]->username, ip);
+                        break;
                     }
                 }
             }
@@ -295,19 +300,21 @@ int processCommand(int sockfd){
     }
     // desloga
     else if(op == 8){
-        for(int i = 0; i < (int)data.size(); i++)
-            if(data[i]->clientSock == sockfd)
+        for(int i = 0; i < (int)data.size(); i++){
+            if(data[i]->clientSock == sockfd && data[i]->isConnected){
+                writeLogF("Cliente se desconectou", data[i]->username, ip);
                 data[i]->isConnected = false;
-        writeFile("Cliente se desconectou");
+            }
+        }
     }
     // finaliza execução do cliente
-    // arrumar esse comando aqui, encerrando o servidor solo
+    // arrumar esse comando aqui, encerrando o servidor sozinho
     else if(atoi(recvOp) == 9){
         for(int i = 0; i < (int)data.size(); i++){
             if(data[i]->clientSock == sockfd){
                 data[i]->isConnected = false;
                 write(sockfd, "[Cliente desconectado]", 22);
-                writeFile("Cliente desconectado");
+                writeLogF("Cliente se desconectou", data[i]->username, ip);
             }
         }
         close(sockfd);
@@ -316,11 +323,16 @@ int processCommand(int sockfd){
     return 1;
 }
 
-void writeFile(std::string sLog){
+void writeLogF(std::string sLog, std::string sUser, std::string sIP){
     std::ofstream arq("logFile.txt", std::ios::app);
 
     if(arq.is_open()){
-        arq << "[" << getCurrentTime() << "] " << sLog << std::endl;
+        if(sUser != " " && sIP != " ")
+            arq << "[" << getCurrentTime() << "] " << sUser << "/" << sIP << ": " << sLog << std::endl;
+        else if(sUser == " " || sIP == " ")
+            arq << "[" << getCurrentTime() << "] " << sLog << std::endl;
+        else if(sIP != " " && sUser == " ")
+            arq << "[" << getCurrentTime() << "] " << sIP << ": " << sLog << std::endl;
         arq.close();
     }
     else
@@ -330,10 +342,8 @@ void writeFile(std::string sLog){
 std::string getCurrentTime(){
     std::time_t time = std::time(0);
 
-    // Obtém a informação do fuso horário local
     std::tm* localTime = std::localtime(&time);
 
-    // Formata a data e hora usando std::put_time
     std::ostringstream datetime;
     datetime << std::put_time(localTime, "%Y-%m-%d %H:%M:%S");
 
@@ -366,14 +376,11 @@ void loadFile(){
     std::ifstream arquivo("dados.csv");
 
     if (arquivo.is_open()) {
-        std::string linha;
-        std::string descartaPrimeiraLinha;
-        std::getline(arquivo, descartaPrimeiraLinha);
-        
+        std::string linha;        
         while (std::getline(arquivo, linha)) {
             std::vector<std::string> campos = split(linha, ',');
 
-            if (campos.size() == 3) { // Certifique-se de que há 3 campos (allTimeScore, username, password)
+            if (campos.size() == 3) {
                 clientData* novoCliente = new clientData;
                 novoCliente->allTimeScore = stoi(campos[0]);
                 novoCliente->clientSock = -1;
@@ -381,6 +388,7 @@ void loadFile(){
                 novoCliente->isPlaying = false;
                 novoCliente->username = campos[1];
                 novoCliente->password = campos[2];
+                novoCliente->ip = " ";
 
                 data.push_back(novoCliente);
             } 
