@@ -34,6 +34,14 @@ struct ThreadArgs {
     struct sockaddr_in clientAddress;
 };
 
+struct clientData {
+    int clientSock;
+    int allTimeScore;
+    bool isConnected;
+    std::string username;
+    std::string password;
+};
+
 // handleTCP e handleUDP
 void* handleTCP(void* arg);
 void* handleUDP(void* arg);

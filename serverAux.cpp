@@ -2,6 +2,8 @@
 #include "serverAux.h"
 #include "serverDef.h"
 
+std::vector<clientData*> data;
+
 // Thread TCP
 void* handleTCP(void* arg){
     ThreadArgs* args = new ThreadArgs;
@@ -107,6 +109,13 @@ void processCommand(int sockfd){
         writeFile("Cliente cadastrado");
 
         // guardar o nome, a senha, o socket(?) a pontuacao
+        clientData* cd = new clientData;
+        cd->username = username;
+        cd->password = pass;
+        cd->clientSock = sockfd;
+        cd->isConnected = true;
+        cd->allTimeScore = 0;
+        data.push_back(cd);
     }
     // mudar senha
     else if(op == 2){
@@ -118,7 +127,7 @@ void processCommand(int sockfd){
 
         // std::cout << passLen << std::endl;
 
-        // ler a senha antiga e verificar se ela bate com o sistema
+        // ler a senha antiga
         char oldPass[passLen];
         size = read(sockfd, recvline, passLen);
         for(int i = 0; i < passLen; i++)
@@ -134,18 +143,33 @@ void processCommand(int sockfd){
 
         // std::cout << passLen << std::endl;
 
-        // ler a senha nova e registrar no sistema
+        // ler a senha nova
         char newPass[passLen];
         size = read(sockfd, recvline, passLen);
         for(int i = 0; i < passLen; i++)
             newPass[i] = recvline[i];
         memset(recvline, 0, sizeof(recvline));
 
-        writeFile("Senha de cliente alterada");
         // std::cout << newPass << std::endl;
+
+        // buscar entre os clientes cadastrados e mudar senha
+        // colocar isso em uma funcao
+        for(int i = 0; i < (int)data.size(); i++){
+            if(data[i]->clientSock == sockfd){
+                if(data[i]->password == oldPass){
+                    data[i]->password = newPass;
+                    writeFile("Senha de cliente alterada");
+                    // reescrever arquivo com todos os itens do struct depois
+                }
+                else
+                    std::cout << "Senha antiga incorreta!" << std::endl;
+            }
+        }
+        
     }
     // logar
     else if(op == 3){
+        bool existe = false;
         // ler o tamanho do username e limpar buffer
         int userLen;
         size = read(sockfd, recvline, 5);
@@ -172,16 +196,31 @@ void processCommand(int sockfd){
             pass[i] = recvline[i];
         memset(recvline, 0, sizeof(recvline));
 
-        writeFile("Cliente conectado");
-        // verificar se o login e senha estao corretos
+        // verificar se o cliente existe
+        for(int i = 0; i < (int)data.size(); i++){
+            if(data[i]->username == username && data[i]->password == pass){
+                data[i]->isConnected = true;
+                writeFile("Cliente conectado");
+                existe = true;
+            }
+        }
+        // fazer um write aqui talvez
+        if(!existe)
+            std::cout << "Cliente não cadastrado" << std::endl;
     }
     // tabela de pontuacao de todos usuarios
     else if(op == 4){
-
+        std::cout << "Tabela de Pontuação:" << std::endl;
+        for(int i = 0; i < (int)data.size(); i++)
+            std::cout << data[i]->username << ": " << data[i]->allTimeScore << std::endl;
     }
     // usuarios conectados
     else if(op == 5){
-        
+        std::cout << "Usuários conectados:" << std::endl;
+        for(int i = 0; i < (int)data.size(); i++){
+            if(data[i]->isConnected)
+                std::cout << data[i]->username << std::endl;
+        }
     }
     // iniciar partida como pacman
     else if(op == 6){
@@ -207,10 +246,16 @@ void processCommand(int sockfd){
     }
     // desloga
     else if(op == 8){
+        for(int i = 0; i < (int)data.size(); i++)
+            if(data[i]->clientSock == sockfd)
+                data[i]->isConnected = false;
         writeFile("Cliente se desconectou");
     }
     // finaliza execução do cliente
     else if(atoi(recvOp) == 9){
+        for(int i = 0; i < (int)data.size(); i++)
+            if(data[i]->clientSock == sockfd)
+                data[i]->isConnected = false;
         std::cout << "[Cliente " << sockfd << " desconectado]" << std::endl;
         writeFile("Cliente desconectado");
         close(sockfd);
