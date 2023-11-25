@@ -2,6 +2,7 @@
 #include "serverAux.h"
 #include "serverDef.h"
 
+bool isLoaded = false;
 std::vector<clientData*> data;
 
 // Thread TCP
@@ -10,9 +11,12 @@ void* handleTCP(void* arg){
     args = (ThreadArgs*)arg;
     int socket = *(int*)args->connfd;
     int ret = 1;
-    // int flag = 1;
-    // char recvline[MAXLINE];
-    // ssize_t size;
+
+    // carregar os arquivos do sistema
+    if(!isLoaded){
+        loadFile();
+        isLoaded = true;
+    }
 
     write(socket, "Bem vindo. Digite um comando: ", 31);
     // verifica se o usuario parou o servidor com ^C
@@ -21,7 +25,7 @@ void* handleTCP(void* arg){
         ret = processCommand(socket);
     }
 
-    close(socket);
+    // close(socket);
     delete args;
     pthread_exit(nullptr);
 }
@@ -133,6 +137,7 @@ int processCommand(int sockfd){
             cd->isPlaying = false;
             cd->allTimeScore = 0;
             data.push_back(cd);
+            writeClientDataF();
             write(sockfd, "1", 1);
             writeFile("Cliente cadastrado");
         }
@@ -173,12 +178,12 @@ int processCommand(int sockfd){
         // buscar entre os clientes cadastrados e mudar senha
         for(int i = 0; i < (int)data.size(); i++){
             if(data[i]->clientSock == sockfd){
-                // std::cout << data[i]->password << " " << oldPass << std::endl;
                 if(data[i]->password == oldPass){
                     data[i]->password = newPass;
+                    writeClientDataF();
                     write(sockfd, "1", 1);
                     writeFile("Senha de cliente alterada");
-                    // reescrever arquivo com todos os itens do struct depois
+                    break;
                 }
                 else
                     write(sockfd, "0", 1);
@@ -217,6 +222,7 @@ int processCommand(int sockfd){
         for(int i = 0; i < (int)data.size(); i++){
             if(data[i]->username == username && data[i]->password == pass && !data[i]->isConnected){
                 data[i]->isConnected = true;
+                data[i]->clientSock = sockfd;
                 write(sockfd, "1", 1);
                 writeFile("Cliente conectado");
                 existe = true;
@@ -304,6 +310,7 @@ int processCommand(int sockfd){
                 writeFile("Cliente desconectado");
             }
         }
+        close(sockfd);
         return 0;
     }
     return 1;
@@ -331,4 +338,57 @@ std::string getCurrentTime(){
     datetime << std::put_time(localTime, "%Y-%m-%d %H:%M:%S");
 
     return datetime.str();
+}
+
+void writeClientDataF(){
+    std::ofstream arquivo("dados.csv");
+
+    if (arquivo.is_open()) {
+        for(int i = 0; i < (int)data.size(); i++)
+            arquivo << data[i]->allTimeScore << "," << data[i]->username << "," << data[i]->password << "\n";
+
+        arquivo.close();
+    } 
+    else
+        std::cerr << "Erro ao abrir o arquivo para escrita." << std::endl;
+}
+
+std::vector<std::string> split(const std::string &s, char delimiter){
+    std::vector<std::string> tokens;
+    std::istringstream tokenStream(s);
+    std::string token;
+    while (std::getline(tokenStream, token, delimiter))
+        tokens.push_back(token);
+    return tokens;
+}
+
+void loadFile(){
+    std::ifstream arquivo("dados.csv");
+
+    if (arquivo.is_open()) {
+        std::string linha;
+        std::string descartaPrimeiraLinha;
+        std::getline(arquivo, descartaPrimeiraLinha);
+        
+        while (std::getline(arquivo, linha)) {
+            std::vector<std::string> campos = split(linha, ',');
+
+            if (campos.size() == 3) { // Certifique-se de que há 3 campos (allTimeScore, username, password)
+                clientData* novoCliente = new clientData;
+                novoCliente->allTimeScore = stoi(campos[0]);
+                novoCliente->clientSock = -1;
+                novoCliente->isConnected = false;
+                novoCliente->isPlaying = false;
+                novoCliente->username = campos[1];
+                novoCliente->password = campos[2];
+
+                data.push_back(novoCliente);
+            } 
+            else
+                std::cerr << "Erro: Linha inválida no arquivo CSV." << std::endl;
+        }
+        arquivo.close();
+    } 
+    else 
+        std::cerr << "Erro ao abrir o arquivo para leitura." << std::endl;
 }

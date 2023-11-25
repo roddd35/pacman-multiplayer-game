@@ -48,6 +48,8 @@ struct clientData {
 int processCommand(int sockfd);
 void* handleTCP(void* arg);
 void* handleUDP(void* arg);
+void loadFile();
+void writeClientDataF();
 void writeFile(std::string sLog);
-void manipuladorSinal(int sinal);
+
 std::string getCurrentTime();
