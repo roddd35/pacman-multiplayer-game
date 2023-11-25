@@ -4,8 +4,12 @@
 #include <ctime>
 #include <thread>
 #include <cerrno>
+#include <chrono>
 #include <vector>
 #include <string>
+#include <sstream>
+#include <iomanip>
+#include <fstream>
 #include <cstring>
 #include <netdb.h>
 #include <cstdlib>
@@ -34,3 +38,5 @@ struct ThreadArgs {
 void* handleTCP(void* arg);
 void* handleUDP(void* arg);
 void processCommand(int sockfd);
+void writeFile(std::string sLog);
+std::string getCurrentTime();

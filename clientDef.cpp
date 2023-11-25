@@ -13,6 +13,7 @@ Client::Client(int sock, int port, char protocol[3], char IP[INET_ADDRSTRLEN]){
 Client::~Client(){
 
 }
+
 /*-*-*-*-*-* Imprimir *-*-*-*-*-*/
 void Client::printParameters(){
     std::cout << "Socket: " << this->sockfd << std::endl;

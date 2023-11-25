@@ -104,8 +104,8 @@ void processCommand(int sockfd){
         memset(recvline, 0, sizeof(recvline));
 
         // std::cout << pass << std::endl;
+        writeFile("Cliente cadastrado");
 
-        // fazer o registro no arquivo de log
         // guardar o nome, a senha, o socket(?) a pontuacao
     }
     // mudar senha
@@ -141,6 +141,7 @@ void processCommand(int sockfd){
             newPass[i] = recvline[i];
         memset(recvline, 0, sizeof(recvline));
 
+        writeFile("Senha de cliente alterada");
         // std::cout << newPass << std::endl;
     }
     // logar
@@ -171,6 +172,7 @@ void processCommand(int sockfd){
             pass[i] = recvline[i];
         memset(recvline, 0, sizeof(recvline));
 
+        writeFile("Cliente conectado");
         // verificar se o login e senha estao corretos
     }
     // tabela de pontuacao de todos usuarios
@@ -183,7 +185,7 @@ void processCommand(int sockfd){
     }
     // iniciar partida como pacman
     else if(op == 6){
-        
+        writeFile("Cliente iniciou partida");
     }
     // entrar em outra partida
     else if(op == 7){
@@ -200,16 +202,41 @@ void processCommand(int sockfd){
         for(int i = 0; i < challengeLen; i++)
             challenge[i] = recvline[i];
         memset(recvline, 0, sizeof(recvline));
-
+        writeFile("Cliente se conectou a uma partida");
         // std::cout << challenge << std::endl;
     }
     // desloga
     else if(op == 8){
-        
+        writeFile("Cliente se desconectou");
     }
     // finaliza execução do cliente
     else if(atoi(recvOp) == 9){
         std::cout << "[Cliente " << sockfd << " desconectado]" << std::endl;
+        writeFile("Cliente desconectado");
         close(sockfd);
     }
+}
+
+void writeFile(std::string sLog){
+    std::ofstream arq("logFile.txt", std::ios::app);
+
+    if(arq.is_open()){
+        arq << "[" << getCurrentTime() << "] " << sLog << std::endl;
+        arq.close();
+    }
+    else
+        std::cerr << "[Erro] salvar dados no arquivo de Log" << std::endl;
+}
+
+std::string getCurrentTime(){
+    std::time_t time = std::time(0);
+
+    // Obtém a informação do fuso horário local
+    std::tm* localTime = std::localtime(&time);
+
+    // Formata a data e hora usando std::put_time
+    std::ostringstream datetime;
+    datetime << std::put_time(localTime, "%Y-%m-%d %H:%M:%S");
+
+    return datetime.str();
 }

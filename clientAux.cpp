@@ -114,7 +114,6 @@ void write_command(int sock){
             msg[i] = aux[i];
         write(sock, msg, sizeof(aux));
         memset(msg, 0, sizeof(msg));
-        aux = nullptr;
 
         // escrever o tamanho do segundo trecho
         std::cin >> aux;
@@ -127,7 +126,6 @@ void write_command(int sock){
             msg[i] = aux[i];
         write(sock, msg, sizeof(aux));
         memset(msg, 0, sizeof(msg));
-        aux = nullptr;
     }
 
     else if(command == "lideres"){
