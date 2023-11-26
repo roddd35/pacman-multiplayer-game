@@ -142,3 +142,153 @@
 [2023-11-25 19:22:36] otavio/127.0.0.1: Cliente logado!
 [2023-11-25 19:22:39] /: Cliente não logado!
 [2023-11-25 19:22:39] /: Cliente não logado!
+[2023-11-25 19:46:33] Servidor iniciado
+[2023-11-25 19:46:36] Servidor iniciado
+[2023-11-25 19:46:39] Servidor iniciado
+[2023-11-25 19:49:34] Servidor iniciado
+[2023-11-25 19:50:53] Servidor iniciado
+[2023-11-25 19:50:54] Servidor iniciado
+[2023-11-25 19:50:55] Servidor iniciado
+[2023-11-25 19:50:56] Servidor iniciado
+[2023-11-25 19:50:57] Servidor iniciado
+[2023-11-25 19:50:58] Servidor iniciado
+[2023-11-25 19:51:15] Servidor iniciado
+[2023-11-25 19:51:16] Servidor iniciado
+[2023-11-25 19:51:57] Servidor iniciado
+[2023-11-25 19:51:59] Servidor iniciado
+[2023-11-25 19:52:00] Servidor iniciado
+[2023-11-25 19:52:03] Servidor iniciado
+[2023-11-25 19:52:04] Servidor iniciado
+[2023-11-25 19:52:07] Servidor iniciado
+[2023-11-25 19:52:11] Servidor iniciado
+[2023-11-25 19:53:11] Servidor iniciado
+[2023-11-25 19:53:14] Servidor iniciado
+[2023-11-25 20:04:35] Servidor iniciado
+[2023-11-25 20:04:36] Servidor iniciado
+[2023-11-25 20:04:38] Servidor iniciado
+[2023-11-25 20:04:41] Servidor iniciado
+[2023-11-25 20:04:44] Servidor iniciado
+[2023-11-25 20:09:12] Servidor iniciado
+[2023-11-25 20:09:14] Servidor iniciado
+[2023-11-25 20:09:16] Servidor iniciado
+[2023-11-25 20:09:47] Servidor iniciado
+[2023-11-25 20:09:49] Servidor iniciado
+[2023-11-25 20:14:48] Servidor iniciado
+[2023-11-25 20:14:57] Servidor iniciado
+[2023-11-25 20:15:00] Servidor iniciado
+[2023-11-25 20:15:02] Servidor iniciado
+[2023-11-25 20:15:03] Servidor iniciado
+[2023-11-25 20:15:05] Servidor iniciado
+[2023-11-25 20:18:52] Servidor iniciado
+[2023-11-25 20:18:54] Servidor iniciado
+[2023-11-25 20:19:18] Servidor iniciado
+[2023-11-25 20:19:20] Servidor iniciado
+[2023-11-25 20:25:29] Servidor iniciado
+[2023-11-25 20:25:30] Servidor iniciado
+[2023-11-25 20:25:49] Servidor iniciado
+[2023-11-25 20:25:50] Servidor iniciado
+[2023-11-25 20:25:51] Servidor iniciado
+[2023-11-25 20:25:53] Servidor iniciado
+[2023-11-25 20:27:23] Servidor iniciado
+[2023-11-25 20:27:25] Servidor iniciado
+[2023-11-25 20:27:27] Servidor iniciado
+[2023-11-25 20:27:28] Servidor iniciado
+[2023-11-25 20:28:10] Servidor iniciado
+[2023-11-25 20:28:12] Servidor iniciado
+[2023-11-25 20:29:40] Servidor iniciado
+[2023-11-25 20:31:41] Servidor iniciado
+[2023-11-25 20:31:43] Servidor iniciado
+[2023-11-25 20:31:44] Servidor iniciado
+[2023-11-25 20:31:46] Servidor iniciado
+[2023-11-25 20:31:48] Servidor iniciado
+[2023-11-25 20:33:14] Servidor iniciado
+[2023-11-25 20:33:16] Servidor iniciado
+[2023-11-25 20:33:18] Servidor iniciado
+[2023-11-25 20:34:38] Servidor iniciado
+[2023-11-25 20:34:39] Servidor iniciado
+[2023-11-25 20:34:41] Servidor iniciado
+[2023-11-25 20:34:42] Servidor iniciado
+[2023-11-25 20:34:44] Servidor iniciado
+[2023-11-25 20:36:09] Servidor iniciado
+[2023-11-25 20:36:11] Servidor iniciado
+[2023-11-25 20:36:54] Servidor iniciado
+[2023-11-25 20:36:56] Servidor iniciado
+[2023-11-25 20:36:58] Servidor iniciado
+[2023-11-25 20:43:17] Servidor iniciado
+[2023-11-25 20:43:27] Servidor iniciado
+[2023-11-25 20:43:28] Servidor iniciado
+[2023-11-25 20:43:57] Servidor iniciado
+[2023-11-25 20:44:02] otavio/127.0.0.1: Cliente logado!
+[2023-11-25 20:44:04] otavio/127.0.0.1: Cliente se desconectou
+[2023-11-25 20:50:52] Servidor iniciado
+[2023-11-25 20:50:53] Servidor iniciado
+[2023-11-25 20:51:14] Servidor iniciado
+[2023-11-25 20:51:56] Servidor iniciado
+[2023-11-25 20:51:57] Servidor iniciado
+[2023-11-25 20:52:31] Servidor iniciado
+[2023-11-25 20:52:58] Servidor iniciado
+[2023-11-25 20:53:08] Servidor iniciado
+[2023-11-25 20:53:11] Servidor iniciado
+[2023-11-25 20:53:15] otavio/127.0.0.1: Cliente logado!
+[2023-11-25 20:55:05] Servidor iniciado
+[2023-11-25 20:55:25] Servidor iniciado
+[2023-11-25 20:55:28] otavio/127.0.0.1: Cliente logado!
+[2023-11-25 20:55:42] Servidor iniciado
+[2023-11-25 20:56:03] Servidor iniciado
+[2023-11-25 20:56:54] Servidor iniciado
+[2023-11-25 20:56:59] Servidor iniciado
+[2023-11-25 20:57:10] Servidor iniciado
+[2023-11-25 20:57:11] Servidor iniciado
+[2023-11-25 20:57:39] otavio/127.0.0.1: Cliente logado!
+[2023-11-25 20:57:39] otavio/127.0.0.1: Cliente logado!
+[2023-11-25 20:57:39] otavio/127.0.0.1: Cliente logado!
+[2023-11-25 20:57:39] otavio/127.0.0.1: Cliente logado!
+[2023-11-25 21:19:50] Servidor iniciado
+[2023-11-25 21:19:57] otavio/127.0.0.1: Cliente logado!
+[2023-11-25 21:20:04] Servidor iniciado
+[2023-11-25 21:20:10] Servidor iniciado
+[2023-11-25 21:20:12] Servidor iniciado
+[2023-11-25 21:20:16] mano/127.0.0.1: Cliente logado!
+[2023-11-25 21:20:49] Servidor iniciado
+[2023-11-25 21:20:50] Servidor iniciado
+[2023-11-25 21:20:53] Servidor iniciado
+[2023-11-25 21:20:57] mano/127.0.0.1: Cliente logado!
+[2023-11-25 21:20:57] mano/127.0.0.1: Cliente logado!
+[2023-11-25 21:20:57] mano/127.0.0.1: Cliente logado!
+[2023-11-25 21:20:57] mano/127.0.0.1: Cliente logado!
+[2023-11-25 21:21:10] mano/127.0.0.1: Cliente não logado!
+[2023-11-25 21:21:17] ze/127.0.0.1: Cliente não logado!
+[2023-11-25 21:21:20] otavio/127.0.0.1: Cliente logado!
+[2023-11-25 21:21:20] otavio/127.0.0.1: Cliente logado!
+[2023-11-25 21:21:20] otavio/127.0.0.1: Cliente logado!
+[2023-11-25 21:21:20] otavio/127.0.0.1: Cliente logado!
+[2023-11-25 21:21:24] otavio/127.0.0.1: Cliente se desconectou
+[2023-11-25 21:21:24] mano/127.0.0.1: Cliente se desconectou
+[2023-11-25 21:21:24] otavio/127.0.0.1: Cliente se desconectou
+[2023-11-25 21:21:24] mano/127.0.0.1: Cliente se desconectou
+[2023-11-25 21:21:24] otavio/127.0.0.1: Cliente se desconectou
+[2023-11-25 21:21:24] mano/127.0.0.1: Cliente se desconectou
+[2023-11-25 21:21:24] otavio/127.0.0.1: Cliente se desconectou
+[2023-11-25 21:21:24] mano/127.0.0.1: Cliente se desconectou
+[2023-11-25 21:21:28] otavio/127.0.0.1: Cliente logado!
+[2023-11-25 21:21:28] otavio/127.0.0.1: Cliente logado!
+[2023-11-25 21:21:28] otavio/127.0.0.1: Cliente logado!
+[2023-11-25 21:21:28] otavio/127.0.0.1: Cliente logado!
+[2023-11-25 21:21:32] mano/127.0.0.1: Cliente logado!
+[2023-11-25 21:21:32] mano/127.0.0.1: Cliente logado!
+[2023-11-25 21:21:32] mano/127.0.0.1: Cliente logado!
+[2023-11-25 21:21:32] mano/127.0.0.1: Cliente logado!
+[2023-11-25 21:22:36] Servidor iniciado
+[2023-11-25 21:22:37] Servidor iniciado
+[2023-11-25 21:22:38] Servidor iniciado
+[2023-11-25 21:22:39] Servidor iniciado
+[2023-11-25 21:22:40] Servidor iniciado
+[2023-11-25 21:23:28] Servidor iniciado
+[2023-11-25 21:23:35] mano/127.0.0.1: Cliente logado!
+[2023-11-25 21:23:35] mano/127.0.0.1: Cliente logado!
+[2023-11-25 21:23:35] mano/127.0.0.1: Cliente logado!
+[2023-11-25 21:23:35] mano/127.0.0.1: Cliente logado!
+[2023-11-25 21:23:38] mano/127.0.0.1: Cliente se desconectou
+[2023-11-25 21:23:38] mano/127.0.0.1: Cliente se desconectou
+[2023-11-25 21:23:38] mano/127.0.0.1: Cliente se desconectou
+[2023-11-25 21:23:38] mano/127.0.0.1: Cliente se desconectou

@@ -84,7 +84,7 @@ int Server::runServer(){
     for(;;){
         for(int i = 0; i < (int)this->ports.size(); i++){
             // Conexões UDP
-            std::thread([&](){
+            std::thread([&, i](){
                 int* udpClientSock = new int;
                 *udpClientSock = udpSocks[i];
 
@@ -97,14 +97,14 @@ int Server::runServer(){
                     tUDP += 1;
                 else{
                     std::cerr << "[ERROR]: creating UDP Thread" << std::endl;
-                    delete udpClientSock;
+                    // delete udpClientSock;
                     delete udpArgs;
                 }
 
             }).detach();
 
             // Conexões TCP
-            std::thread([&](){
+            std::thread([&, i](){
                 int* tcpClientSock = new int;
 
                 *tcpClientSock = accept(tcpSocks[i], nullptr, nullptr);
@@ -119,17 +119,12 @@ int Server::runServer(){
                 }
                 else{
                     std::cerr << "[ERROR]: creating TCP Thread" << std::endl;
-                    delete tcpClientSock;
+                    // delete tcpClientSock;
                     delete tcpArgs;
                 }
             }).detach();
         }
     }
-    for (int i = 0; i < tUDP; i++)
-        pthread_join(udpThreads[i], nullptr);
-
-    for (int i = 0; i < tTCP; i++)
-        pthread_join(tcpThreads[i], nullptr);
 
     for (int i = 0; i < (int)this->ports.size(); i++){
         close(tcpSocks[i]);

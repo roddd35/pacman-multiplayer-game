@@ -1,5 +1,7 @@
 #include "clientAux.h"
 
+bool flag = false;
+
 void read_begin(int sock){
     ssize_t size;
     char recvline[SIZEMAX];
@@ -25,7 +27,12 @@ void write_command(int sock, std::string command, char ipCliente[INET_ADDRSTRLEN
     char numString[5];
     char msg[MAXLINE];
 
-    write(sock, ipCliente, INET_ADDRSTRLEN);
+    int tamIP = strlen(ipCliente);
+    snprintf(numString, sizeof(numString), "%04d", tamIP);
+    write(sock, numString, sizeof(numString));
+    memset(numString, 0, sizeof(numString));
+
+    write(sock, ipCliente, tamIP);
 
     if(command == "novo"){
         // escrever o comando (numero de 4 bytes)
@@ -39,7 +46,7 @@ void write_command(int sock, std::string command, char ipCliente[INET_ADDRSTRLEN
         snprintf(numString, sizeof(numString), "%04d", (int)aux.length());
         write(sock, numString, sizeof(numString));
         memset(numString, 0, sizeof(numString));
-        
+
         // escrever o primeiro trecho
         for(int i = 0; i < (int)aux.length(); i++)
             msg[i] = aux[i];
@@ -56,7 +63,7 @@ void write_command(int sock, std::string command, char ipCliente[INET_ADDRSTRLEN
         // escrever o segundo trecho
         for(int i = 0; i < (int)aux.length(); i++)
             msg[i] = aux[i];
-        std::cout << msg << std::endl;
+        std:: cout << msg << std::endl;
         write(sock, msg, aux.length());
         memset(msg, 0, sizeof(msg));
 
@@ -111,6 +118,7 @@ void write_command(int sock, std::string command, char ipCliente[INET_ADDRSTRLEN
 
     else if(command == "entra"){
         // escrever o comando (numero de 4 bytes)
+        flag = true;
         op = 3;
         snprintf(numString, sizeof(numString), "%04d", op);
         write(sock, numString, sizeof(numString));
@@ -162,7 +170,7 @@ void write_command(int sock, std::string command, char ipCliente[INET_ADDRSTRLEN
         memset(msg, 0, sizeof(msg));
     }
 
-    else if(command == "l"){
+    else if(command == "l" && flag){
         // escrever o comando (numero de 4 bytes)
         op = 5;
         snprintf(numString, sizeof(numString), "%04d", op);

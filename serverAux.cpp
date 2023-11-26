@@ -68,27 +68,36 @@ void* handleUDP(void* arg){
 int processCommand(int sockfd){
     int op = 0;
     int res = 1;
+    int tamIP = 0;
     char recvOp[5];
+    char recvIP[MAXLINE];
     char recvline[MAXLINE];
     ssize_t size;
 
-    
+    memset(recvline, 0, sizeof(recvline));
+    memset(recvOp, 0, sizeof(recvOp));
     // ideia: para cada operação possível, vamos definir um numero
     // novo: 1, senha: 2, ...
     // cada numero ocupa 4 bytes na mensagem
     // estrutura da mensagem: [operacao] [tamanho primeiro trecho] [primeiro trecho] [tamanho segundo trecho] [segundo trecho]
     // o tamanho de cada trecho também deve ser enviado em 4 bytes (eu espero)
-    size = read(sockfd, recvline, sizeof(recvline));
-    std::string ip = recvline;
-    memset(recvline, 0, sizeof(recvline));
-    std::cout << ip << std::endl;
+
+    // ler ip tamanho IP
+    size = read(sockfd, recvIP, 5);
+    tamIP = atoi(recvIP);
+    memset(recvIP, 0, sizeof(recvIP));
+
+    size = read(sockfd, recvIP, tamIP);
+    std::string ip = recvIP;
+    memset(recvIP, 0, sizeof(recvIP));
 
     size = read(sockfd, recvOp, 5);
-    op = std::atoi(recvOp);
+    op = atoi(recvOp);
 
     // OPERAÇÕES
     // novo usuário
     if(op == 1){
+        std::cout << "entrou na op " << std::endl;
         // ler o tamanho do username e limpar buffer
         int userLen;
         size = read(sockfd, recvline, 5);
@@ -137,7 +146,6 @@ int processCommand(int sockfd){
             cd->clientSock = sockfd;
             cd->isConnected = false;
             cd->isPlaying = false;
-            cd->ip = ip;
             cd->allTimeScore = 0;
             data.push_back(cd);
             writeClientDataF();
@@ -225,7 +233,6 @@ int processCommand(int sockfd){
             if(data[i]->username == username && data[i]->password == pass && !data[i]->isConnected){
                 data[i]->isConnected = true;
                 data[i]->clientSock = sockfd;
-                data[i]->ip = ip;
                 write(sockfd, "1", 1);
                 writeLogF("Cliente logado!", data[i]->username, ip);
                 existe = true;
@@ -388,7 +395,6 @@ void loadFile(){
                 novoCliente->isPlaying = false;
                 novoCliente->username = campos[1];
                 novoCliente->password = campos[2];
-                novoCliente->ip = " ";
 
                 data.push_back(novoCliente);
             } 
